@@ -1,0 +1,26 @@
+[
+	{
+		"title": "Chocolate",
+		"description": "Sweet candy",
+		"price": 50,
+		"status": true,
+		"stock": 100,
+		"category": "CANDY",
+		"thumbnails": [
+			"https://www.google.com/img1",
+			"https://www.google.com/img2"
+		],
+		"id": 4,
+		"code": "FKF"
+	},
+	{
+		"title": "Milk",
+		"description": "Sweet Drink",
+		"price": 50,
+		"stock": 20,
+		"category": "DRINK",
+		"status": true,
+		"id": 6,
+		"code": "JJK"
+	}
+]

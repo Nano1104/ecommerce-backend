@@ -1,0 +1,137 @@
+paths:
+  /api/users/current:
+    get:
+      summary: Muestra la informacion del usuario de la sesion actual
+      description: Para mostrar la descripcion del usuario de la sesion actual, se debe tener un JWT valido almacenado en las cookies. En caso de que la respuesta sea exitosa se renderizara una vista con los datos del usuario
+      tags:
+        - Usuarios
+      security:
+        - JWTTokenCookie: []
+      responses:
+        "200":
+          description: "Exito. Entrega la vista del usuario actual"
+        "400":
+          description: "Mensaje de error al intentar mostrar la vista con los datos del usuario"
+  /api/users/premium/{uid}:
+    get:
+      summary: Cambia el rol del usuario de "user" a "premium" o viceversa
+      tags:
+        - Usuarios
+      responses:
+        "200":
+            description: "Retorna el mensaje y el resultado del usuario con el rol cambiado"
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message: 
+                      type: string
+                      example: User change role
+                    result:
+                      type: object
+                      $ref: "#components/schemas/User" 
+        "401":
+          description: "Mensaje de que el usuario al que se quiere cambiar el rol no se encontro"
+        "400":
+          description: "Mensaje de error al intentar cambiar el rol al usuario"
+  /api/users/:
+    get:
+      summary: Muestra los usuarios existentes. 
+      description: Solamente el administrador de la app puedo verlos. En caso de que la app se encuentre en entorno de PRODUCCION renderizara la vista de "users"
+      tags:
+        - Usuarios
+      security:
+        - JWTTokenCookie: []
+      responses:
+        "200":
+          description: "Mensaje de que muestra los usuarios"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    example: "Success getting users"
+                  users:
+                    type: array
+                    items:
+                      $ref: "#components/schemas/User"
+        "500":
+          description: "Mensaje de error al intentar mostrar los usuarios"
+    delete:
+      summary: Elimina los usuarios inactivos
+      description: Los usuarios inactivos son aquellos que no han iniciado session en los ultimos dos dias. A cada usuario inactivo que se elimine, se le avisara via email. Se necesita un JWT y cumplir con el rol de "admin" para acceder a esta ruta.
+      tags:
+        - Usuarios
+      responses:
+        "200":
+          description: "Mensaje que se eliminaron los usuarios inactivos exitosamente"
+        "500":
+          description: "Mensaje de error al intentar eliminar los usuarios inactivos"
+  /api/users/{uid}:
+    delete:
+      summary: Elimina un usuario
+      description: Solamente el administrador de la app puede eliminar un usuario. Se necesita tener un JWT y cumplir con el rol de "admin"
+      tags:
+        - Usuarios
+      reponses:
+        "200":
+          description: "Mensaje de que el usuario se elimino exitosamente"
+        "500":
+          description: "Mensaje de error al intentar eliminar el usuario"
+
+
+components:
+  schemas: 
+    User:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de MongoDB
+          example: ObjectId('652211437ecda3ce3b3edc7d')
+        first_name:
+          type: string
+          description: Nombre del usuario
+          example: Bruno
+        last_name: 
+          type: string
+          description: Apellido del usuario
+          example: Acevedo
+        age:
+          type: number
+          description: Edad del usuario
+          example: 22
+        email:
+          type: string
+          description: Email del usuario
+          example: brunoacevedo04@hotmail.com
+        phone:
+          type: number
+          description: Numero de celular del usuario
+          example: 1103940321
+        password:
+          type: string
+          description: Contraseña del usuario
+          example: "$2b$10$DVIMRMehJtNwD6.4TsEAjuBUFVremOYah3.xuC08TxgZfASVVy/hy"
+        cart: 
+          type: ObjectId
+          description: Carrito del usuario
+          example: "ObjectId('652ef34a1d12ebc40970a877')"
+        role:
+          type: string
+          description: Rol que tenga el usuario
+          enum: ["user", "admin", "premium"]
+          example: "premium"
+        last_connection:
+          type: string
+          format: date
+          example: "2023-10-19T19:43:44.488+00:00"
+  securitySchema: 
+    JWTTokenCookie:
+      type: apiKey
+      in: cookie
+      name: token
+    

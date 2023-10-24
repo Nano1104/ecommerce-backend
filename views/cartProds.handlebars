@@ -1,0 +1,30 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center align-items-center text-center" style="height: 100vh;">
+      <div id="cartProds-container" data={{cartId}}>
+        {{#if cartProds}}
+          {{#each cartProds}}
+            <div id="prod-{{this.product._id}}" class="prod-container" container-id="{{this.product._id}}">
+              <h2>{{this.product.title}}</h2>
+              <p>{{this.product.description}}</p>
+              <p id="price_{{this.product._id}}" price={{this.product.price}}>Precio: {{this.product.price}}</p>
+              <p id="quantity_{{this.product._id}}" quantity={{this.quantity}}>Cantidad: {{this.quantity}}</p>
+              <p>Categoría: {{this.product.category}}</p>
+            </div>
+          {{/each}}
+          <h3 class="btn btn-primary" id="btn-finishPurchase">TERMINAR COMPRA</h3>
+        </div>
+      {{else}}
+        <h3>This Cart has no products</h3>
+        <a href="/api/views/products" class="btn btn-warning">VOLVER A PRODUCTOS</a>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+
+
+
+{{!---------------------- SCRIPT ----------------------}}
+<script src="/js/realTimeCartProds.js"></script> 
